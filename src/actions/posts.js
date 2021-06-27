@@ -1,9 +1,10 @@
+import { APIUrls } from '../helpers/urls';
 import {UPDATE_POSTS} from './actionTypes';
 
 export function fetchPosts() {
   return (dispatch) => {
     //Connect-APP backend API.
-    const url = 'http://localhost:8000/api/v1/posts';
+    const url = APIUrls.fetchPosts();
     fetch(url)
       .then((response) => {
         // console.log('response',response.json());

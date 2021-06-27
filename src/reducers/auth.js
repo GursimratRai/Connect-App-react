@@ -8,7 +8,7 @@ const initialAuthState={
 };
 
 export default function auth(state=initialAuthState,action){
-    switch(action,type){
+    switch(action.type){
         case LOGIN_START:
             return {
                 ...state,
