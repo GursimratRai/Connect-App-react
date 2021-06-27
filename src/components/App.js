@@ -1,60 +1,54 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { fetchPosts } from '../actions/posts';
-import { PostsList } from './';
+import { PostsList, Navbar } from './';
+
+//dummy functions for making routing controllers.
+const Login = () => {
+  <div>LOGIN</div>;
+};
+const Signup = () => {
+  <div>SIGN UP</div>;
+};
+const Home = () => {
+  <div>HOME</div>;
+};
 
 class App extends React.Component {
-
   componentDidMount() {
     this.props.dispatch(fetchPosts());
   }
-  
+
   render() {
-    const {posts} = this.props;
+    const { posts } = this.props;
     console.log('props', this.props);
-    return <div>
-       <nav className='nav'>
-         <div className='left-div'>
-           Connect
-           {/* <img src='' alt='logo' /> */}
-         </div>
-         <div className='search-container'>
-           <img className='search-icon' src='https://image.flaticon.com/icons/svg/483/483356.svg' alt='search-icon' />
-           <input placeholder='Search' />
-           <div className='search-results'>
-             <ul>
-               <li className='search-results-row'>
-                 <img src='https://image.flaticon.com/icons/svg/2154/2154651.svg' alt='user-dp' />
-                 <span>John Doe</span>
-               </li>
-               <li className='search-results-row'>
-                 <img src='https://image.flaticon.com/icons/svg/2154/2154651.svg' alt='user-dp' />
-                 <span>John Doe</span>
-               </li>
-             </ul>
+    return (
+      <Router>
+        <div>
+          <Navbar />
+          <PostsList posts={posts} />
 
-           </div>
-         </div>
-         <div className='right-nav'>
-           <div className='user'>
-             <img src='https://image.flaticon.com/icons/svg/2154/2154651.svg' alt='user-dp' id='user-dp' />
-             <span>John Doe</span>
-             
-           </div>
-           <div className='nav-links'>
-             <ul>
-               <li>Log In</li>
-               <li>Log Out</li>
-               <li>Register</li>
-             </ul>
+          <ul>
+            <li>
+              <Link to='/'>Home</Link>
+            </li>
+            <li>
+              <Link to='/login'>Login</Link>
+            </li>
+            <li>
+              <Link to='/signup'>Signup</Link>
+            </li>
+          </ul>
 
-           </div>
-         </div>
-       </nav>
-        <PostsList posts={posts} />
-      </div>
+          <Route exact path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+        </div>
+      </Router>
+    );
   }
 }
 
@@ -65,7 +59,7 @@ function mapStateToProps(state) {
 }
 
 App.propTypes = {
-  posts:PropTypes.array.isRequired
-}
+  posts: PropTypes.array.isRequired,
+};
 
 export default connect(mapStateToProps)(App);

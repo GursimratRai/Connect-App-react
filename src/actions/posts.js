@@ -2,6 +2,7 @@ import {UPDATE_POSTS} from './actionTypes';
 
 export function fetchPosts() {
   return (dispatch) => {
+    //Connect-APP backend API.
     const url = 'http://localhost:8000/api/v1/posts';
     fetch(url)
       .then((response) => {
