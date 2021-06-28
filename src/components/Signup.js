@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { signup, startSignup } from '../actions/auth';
+import { clearAuthState, signup, startSignup } from '../actions/auth';
 
 class Signup extends Component {
   constructor(props) {
@@ -12,6 +12,11 @@ class Signup extends Component {
       confirmPassword: '',
     };
   }
+
+  componentWillUnmount(){
+    this.props.dispatch(clearAuthState());
+  }
+
   handleInputChange = (field, value) => {
     this.setState({
       [field]: value,
@@ -32,7 +37,7 @@ class Signup extends Component {
     return (
       <form className="login-form">
         <span className="login-signup-header">Sign Up</span>
-        {error && <div className="alert-error-dailog">{error}</div>}
+        {error && <div className="alert error-dailog">{error}</div>}
         <div className="field">
           <input
             type="text"

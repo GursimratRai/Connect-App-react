@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 
-import {login} from '../actions/auth';
+import {clearAuthState, login} from '../actions/auth';
 
 class Login extends Component {
   constructor() {
@@ -17,6 +17,10 @@ class Login extends Component {
       email: '',
       password: '',
     };
+  }
+
+  componentWillUnmount(){
+    this.props.dispatch(clearAuthState());
   }
 
   handleEmailChange = (e) => {
@@ -42,12 +46,13 @@ class Login extends Component {
       this.props.dispatch(login(email,password));
     }
   };
+
   render() {
     const {error,inProgress} = this.props.auth;
     return (
       <form className="login-form">
         <span className="login-signup-header">Log In</span>
-        {error && <div className='alert-error-dailog'>{error}</div>}
+        {error && <div className='alert error-dailog'>{error}</div>}
         <div className="field">
           <input
             type="email"

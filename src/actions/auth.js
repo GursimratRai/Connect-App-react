@@ -8,6 +8,7 @@ import {
   SIGNUP_SUCCESS,
   AUTHENTICATE_USER,
   LOG_OUT,
+  CLEAR_AUTH_STATE,
 } from './actionTypes';
 import { getFormBody } from '../helpers/utils';
 
@@ -50,7 +51,7 @@ export function login(email, password) {
         if (data.success) {
           //dispatch action to save user
           localStorage.setItem('token', data.data.token);
-          dispatch(loginSuccess());
+          dispatch(loginSuccess(data.data.user));
           return;
         }
         dispatch(loginFailed(data.message));
@@ -116,5 +117,12 @@ export function signupSuccessful(user) {
   return {
     type: SIGNUP_SUCCESS,
     user
+  };
+}
+
+
+export function clearAuthState(){
+  return {
+     type:CLEAR_AUTH_STATE
   };
 }
