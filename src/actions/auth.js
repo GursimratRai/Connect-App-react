@@ -49,6 +49,7 @@ export function login(email, password) {
         console.log('data', data);
         if (data.success) {
           //dispatch action to save user
+          localStorage.setItem('token', data.data.token);
           dispatch(loginSuccess());
           return;
         }
@@ -90,8 +91,6 @@ export function signup(email, password, confirmPassword, name) {
       })
       .then((data) => {
         if (data.success) {
-        // error in getting the token
-        //   localStorage.setItem('token', data.data.token);
           dispatch(signupSuccessful(data.data.user));
           return;
         }
