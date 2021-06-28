@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -8,6 +9,18 @@ import { fetchPosts } from '../actions/posts';
 import { Home, Navbar, Page404, Login, Signup } from './';
 import { authenticateUser } from '../actions/auth';
 
+const Settings = () => <div> settings </div>;
+const PrivateRoute = (privateRouteToProps) => {
+  const { isLoggedIn, path, component: Component } = privateRouteToProps;
+  return (
+    <Route
+      path={path}
+      render={(props) => {
+        return isLoggedIn ? <Component {...props} /> : <Redirect to="/login" />;
+      }}
+    />
+  );
+};
 class App extends React.Component {
   componentDidMount() {
     this.props.dispatch(fetchPosts());
@@ -15,16 +28,18 @@ class App extends React.Component {
     if (token) {
       const user = jwtDecode(token);
       console.log('user', user);
-      this.props.dispatch(authenticateUser({
-        email:user.email,
-        name:user.name,
-        _id:user._id
-      }));
+      this.props.dispatch(
+        authenticateUser({
+          email: user.email,
+          name: user.name,
+          _id: user._id,
+        })
+      );
     }
   }
 
   render() {
-    const { posts } = this.props;
+    const { posts, auth } = this.props;
     console.log('props', this.props);
     return (
       <Router>
@@ -42,6 +57,11 @@ class App extends React.Component {
             />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <PrivateRoute
+              path="/settings"
+              component={Settings}
+              isLoggedIn={auth.isLoggedIn}
+            />
             <Route component={Page404} />
           </Switch>
         </div>
@@ -53,6 +73,7 @@ class App extends React.Component {
 function mapStateToProps(state) {
   return {
     posts: state.posts,
+    auth: state.auth,
   };
 }
 
