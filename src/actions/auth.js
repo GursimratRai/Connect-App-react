@@ -10,6 +10,7 @@ import {
   LOG_OUT,
   CLEAR_AUTH_STATE,
   EDIT_USER_SUCCESSFUL,
+  EDIT_USER_FAILED
 } from './actionTypes';
 import { getFormBody,getAuthTokenFromLocalStorage } from '../helpers/utils';
 
@@ -162,7 +163,7 @@ export function editUser(name,password,confirmPassword,userId){
         return response.json();
       })
       .then((data) => {
-        
+        console.log('edit user profile',data);
         if (data.success) {
           dispatch(editUserSuccessful(data.data.user));
           if(data.data.token){
