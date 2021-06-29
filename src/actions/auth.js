@@ -13,6 +13,7 @@ import {
   EDIT_USER_FAILED
 } from './actionTypes';
 import { getFormBody,getAuthTokenFromLocalStorage } from '../helpers/utils';
+import { fetchUserFriends } from './friends';
 
 export function startLogin() {
   return {
@@ -53,6 +54,7 @@ export function login(email, password) {
         if (data.success) {
           //dispatch action to save user
           localStorage.setItem('token', data.data.token);
+          dispatch(fetchUserFriends(data.data.user._id)); 
           dispatch(loginSuccess(data.data.user));
           return;
         }

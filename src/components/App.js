@@ -6,9 +6,18 @@ import PropTypes from 'prop-types';
 import * as jwtDecode from 'jwt-decode';
 
 import { fetchPosts } from '../actions/posts';
-import { Home, Navbar, Page404, Login, Signup , Settings ,UserProfile} from './';
+import {
+  Home,
+  Navbar,
+  Page404,
+  Login,
+  Signup,
+  Settings,
+  UserProfile,
+} from './';
 import { authenticateUser } from '../actions/auth';
 import { getAuthTokenFromLocalStorage } from '../helpers/utils';
+import { fetchUserFriends } from '../actions/friends';
 
 const PrivateRoute = (privateRouteToProps) => {
   const { isLoggedIn, path, component: Component } = privateRouteToProps;
@@ -16,12 +25,18 @@ const PrivateRoute = (privateRouteToProps) => {
     <Route
       path={path}
       render={(props) => {
-        return isLoggedIn ? <Component {...props} /> : <Redirect to={{
-          pathname : '/login',
-          state : {
-            from : props.location
-          }
-        }} />;
+        return isLoggedIn ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: {
+                from: props.location,
+              },
+            }}
+          />
+        );
       }}
     />
   );
@@ -40,11 +55,12 @@ class App extends React.Component {
           _id: user._id,
         })
       );
+      this.props.dispatch(fetchUserFriends(user._id));
     }
   }
 
   render() {
-    const { posts, auth } = this.props;
+    const { posts, auth, friends } = this.props;
     console.log('props', this.props);
     return (
       <Router>
@@ -57,7 +73,14 @@ class App extends React.Component {
               path="/"
               //use render instead of component to pass props as argument.
               render={(props) => {
-                return <Home {...props} posts={posts} />;
+                return (
+                  <Home
+                    {...props}
+                    posts={posts}
+                    friends={friends}
+                    isLoggedIn={auth.isLoggedIn}
+                  />
+                );
               }}
             />
             <Route path="/login" component={Login} />
@@ -67,7 +90,7 @@ class App extends React.Component {
               component={Settings}
               isLoggedIn={auth.isLoggedIn}
             />
-            <PrivateRoute 
+            <PrivateRoute
               path="/user/:userId"
               component={UserProfile}
               isLoggedIn={auth.isLoggedIn}
@@ -84,6 +107,7 @@ function mapStateToProps(state) {
   return {
     posts: state.posts,
     auth: state.auth,
+    friends: state.friends,
   };
 }
 
