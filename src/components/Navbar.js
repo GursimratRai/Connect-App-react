@@ -14,6 +14,7 @@ class Navbar extends React.Component {
     const searchText = e.target.value;
     this.props.dispatch(searchUsers(searchText));
   }
+  
   render() {
     const { auth,results } = this.props;
     return (
@@ -30,13 +31,13 @@ class Navbar extends React.Component {
             src="https://image.flaticon.com/icons/svg/483/483356.svg"
             alt="search-icon"
           />
-          <input placeholder="Search" onChange={this.handleSearch} />
+          <input id='search' placeholder="Search" onChange={this.handleSearch} />
           {results.length > 0 && (
             <div className="search-results">
               <ul>
                 {results.map((user) => (
-                <li className="search-results-row" key={user.id}>
-                  <Link to={`/user/${user.id}`}>
+                <li className="search-results-row" key={user._id} >
+                  <Link to={`/user/${user._id}`}>
                   <img
                     src="https://image.flaticon.com/icons/svg/2154/2154651.svg"
                     alt="user-dp"
